@@ -1,0 +1,26 @@
+# Node modules
+node_modules/
+
+# Build output
+build/
+dist/
+
+# Environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# NPM packages
+*.log
+*.lock
+*.swp
+
+# Editor files
+.vscode/
+.idea/
+
+# Dependency directories
+public/
+coverage/
+.cache/

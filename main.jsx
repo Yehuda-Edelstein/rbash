@@ -1,0 +1,320 @@
+import { useEffect, useRef, useState } from "react";
+import { v4 as uuid } from "uuid";
+import "./main.css";
+
+function RTerminal(props) {
+  // default props
+  const {
+    dirs = ["pass", "in", "your", "custom", "dirs"], // set default dirs value
+    commands = {},
+    builtInCommands = {
+      clear: { cmd: "clear/cls", output: null, def: "clears terminal" },
+      help: {
+        cmd: "help",
+        output: null,
+        def: "shows list of available commands",
+      },
+      ls: {
+        cmd: "ls",
+        output: null,
+        def: "lists contents of current working directory",
+      },
+      ...commands,
+    },
+    bgColor = "#1e1e1e",
+    color = "White",
+  } = props;
+
+  // get current date
+  const d = new Date();
+
+  const [commandLine, setCommandLine] = useState([
+    {
+      id: uuid(),
+      type: "time",
+      text: `Last login: ${d.toDateString()} ${d
+        .toLocaleTimeString()
+        .replace(
+          /\s[AP]M$/,
+          ""
+        )} on ttys001. Type 'help' for a list of commands.`,
+    },
+    { id: uuid(), type: "input" },
+  ]);
+  const [previousCommands, setPreviousCommands] = useState([]);
+  const [caretPosition, setCaretPosition] = useState(0);
+  const [currentCommandIndex, setCurrentCommandIndex] = useState(0);
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, [commandLine]);
+
+  const handleSubmit = (event, id) => {
+    setCurrentCommandIndex(0);
+    const input = event.target.innerText;
+    if (!input.trim()) {
+      // check if input is empty
+      const current = [...commandLine];
+      const i = current.find((obj) => obj.id === id);
+      i.type = "submitted";
+      i.text = "";
+      const nInput = { id: uuid(), type: "input" };
+      current.push(nInput);
+      return current;
+    }
+    const cmd = input.trim().split(" ")[0];
+    // add previous command to array
+    const prev = [...previousCommands];
+    prev.push(input);
+    setPreviousCommands(prev);
+    // check commands
+    if (cmd === "clear" || cmd === "cls") {
+      const arr = [{ id: uuid(), type: "first-input" }];
+      event.target.innerText = "";
+      // reset caret margins
+      setCaretPosition(0);
+      return arr;
+    } else if (cmd === "help") {
+      // change current line type
+      const current = [...commandLine];
+      const i = current.find((obj) => obj.id === id);
+      i.type = "submitted";
+      i.text = input.replace(/&nbsp;/g, " ");
+      // generate output
+      const nOutput = {
+        id: uuid(),
+        type: "list-output",
+        text: [
+          "Welcome to the help menu!",
+          "Here is a list of available commands and their descriptions:",
+          "",
+          ...Object.keys(builtInCommands).map(
+            (key) => `${builtInCommands[key].cmd}: ${builtInCommands[key].def}`
+          ),
+        ],
+      };
+      const nInput = { id: uuid(), type: "input" };
+      current.push(nOutput, nInput);
+      // reset caret margins
+      setCaretPosition(0);
+      return current;
+    } else if (cmd === "ls") {
+      // change current line type
+      const current = [...commandLine];
+      const i = current.find((obj) => obj.id === id);
+      i.type = "submitted";
+      i.text = input.replace(/&nbsp;/g, " ");
+      // generate output
+      const nOutput = {
+        id: uuid(),
+        type: "list-output",
+        text: dirs,
+      };
+      const nInput = { id: uuid(), type: "input" };
+      current.push(nOutput, nInput);
+      // reset caret margins
+      setCaretPosition(0);
+      return current;
+    } else {
+      // change current line type
+      const current = [...commandLine];
+      const i = current.find((obj) => obj.id === id);
+      i.type = "submitted";
+      i.text = input.replace(/&nbsp;/g, " ");
+      // generate output
+      const nOutput = {
+        id: uuid(),
+        type: "output",
+        text:
+          cmd in builtInCommands
+            ? builtInCommands[cmd].output
+            : `-bash: ${cmd}: command not found`,
+      };
+      const nInput = { id: uuid(), type: "input" };
+      current.push(nOutput, nInput);
+      // reset caret margins
+      setCaretPosition(0);
+      return current;
+    }
+  };
+
+  // handle key down events
+  const handleKeyDown = (event, id) => {
+    let input = event.target;
+    if (event.keyCode === 32) {
+      // add spaces when spacebar is held down
+      setCaretPosition(caretPosition + 1);
+    } else if (event.keyCode === 38) {
+      // up arrow
+      if (currentCommandIndex < previousCommands.length) {
+        setCurrentCommandIndex(currentCommandIndex + 1);
+      }
+      input.innerText =
+        previousCommands[previousCommands.length - currentCommandIndex] || "";
+      setCaretPosition(input.innerText.length);
+    } else if (event.keyCode === 40) {
+      // down arrow
+      if (currentCommandIndex > 0) {
+        setCurrentCommandIndex(currentCommandIndex - 1);
+        input.innerText =
+          previousCommands[previousCommands.length - currentCommandIndex] || "";
+        setCaretPosition(input.innerText.length);
+      } else {
+        setCurrentCommandIndex(0);
+        input.innerText = "";
+        setCaretPosition(0);
+      }
+    } else if (event.keyCode === 13) {
+      // Enter key pressed
+      event.preventDefault();
+      setCommandLine(handleSubmit(event, id));
+    } else if (event.keyCode === 38 || event.keyCode === 40) {
+      event.preventDefault();
+    } else if (
+      event.shiftKey &&
+      (event.keyCode === 37 || event.keyCode === 39)
+    ) {
+      event.preventDefault();
+      return;
+    } else if (
+      (event.keyCode === 37 || event.keyCode === 8) &&
+      caretPosition > 0
+    ) {
+      if (event.metaKey) {
+        setCaretPosition(0);
+      } else {
+        setCaretPosition(caretPosition - 1);
+      }
+    } else if (
+      event.keyCode === 39 &&
+      caretPosition < event.target.innerText.length
+    ) {
+      if (event.metaKey) {
+        setCaretPosition(event.target.innerText.length);
+      } else {
+        setCaretPosition(caretPosition + 1);
+      }
+    } else if (event.key.length === 1 && !event.repeat) {
+      setCaretPosition(caretPosition + 1);
+    }
+  };
+
+  return (
+    <div>
+      <div className="terminal">
+        <div className="terminal-header">
+          <div className="terminal-buttons-container">
+            <span className="terminal-button terminal-button-red" />
+            <span className="terminal-button terminal-button-yellow" />
+            <span className="terminal-button terminal-button-green" />
+          </div>
+        </div>
+        <div
+          className="terminal-body"
+          style={{
+            backgroundColor: bgColor,
+            color: color,
+          }}
+        >
+          {commandLine.map((line, i) => {
+            switch (line.type) {
+              case "time":
+                return (
+                  <div className="time" key={i}>
+                    <span className="terminal-time">{line.text}</span>
+                  </div>
+                );
+              case "first-input":
+                return (
+                  <div key={i} className="first-input">
+                    <span>~</span>
+                    <form>
+                      <span className="money">$</span>
+                      <div
+                        contentEditable
+                        className="terminal-input"
+                        onBlur={({ target }) => target.focus()}
+                        autoFocus
+                        ref={inputRef}
+                        onKeyDown={(ev) => {
+                          handleKeyDown(ev, line.id);
+                        }}
+                        spellCheck="false"
+                      ></div>
+                      <span
+                        className="text-caret"
+                        style={{ left: `${caretPosition}ch` }}
+                      ></span>
+                    </form>
+                  </div>
+                );
+              case "input":
+                return (
+                  <div key={i} className="input">
+                    <span>~</span>
+                    <form>
+                      <span className="money">$</span>
+                      <div
+                        contentEditable
+                        className="terminal-input"
+                        onBlur={({ target }) => target.focus()}
+                        autoFocus
+                        ref={inputRef}
+                        onKeyDown={(ev) => {
+                          handleKeyDown(ev, line.id);
+                        }}
+                        spellCheck="false"
+                      ></div>
+                      <span
+                        className="text-caret"
+                        style={{ left: `${caretPosition}ch` }}
+                      ></span>
+                    </form>
+                  </div>
+                );
+              case "submitted":
+                return (
+                  <div
+                    key={i}
+                    className={i === 0 ? "first-submitted" : "submitted"}
+                  >
+                    <span>~</span>
+                    <form>
+                      <span className="money">$</span>
+                      <div className="terminal-input">{line.text}</div>
+                    </form>
+                  </div>
+                );
+              case "output":
+                return (
+                  <div key={i} className="output">
+                    {line.text}
+                  </div>
+                );
+              case "list-output":
+                return (
+                  <div className="list" key={i}>
+                    {line.text.map((text, j) => (
+                      <div
+                        key={j}
+                        className="list-item"
+                        style={{ minHeight: "12.5px" }}
+                      >
+                        {text}
+                      </div>
+                    ))}
+                  </div>
+                );
+              default:
+                return null;
+            }
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export { RTerminal };

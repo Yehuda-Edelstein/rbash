@@ -69,7 +69,7 @@
   .terminal-header
   .terminal-buttons-container
   .terminal-button-yellow::before {
-  content: "";
+  /* content: "";
   display: block;
   position: absolute;
   top: 50%;
@@ -79,7 +79,7 @@
   opacity: 0;
   height: 1.5px;
   border-radius: 0.5px;
-  background-color: black;
+  background-color: black; */
 }
 
 .terminal .terminal-header .terminal-buttons-container .terminal-button-green {
@@ -91,7 +91,7 @@
   .terminal-header
   .terminal-buttons-container
   .terminal-button-green::before {
-  content: "";
+  /* content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -100,14 +100,14 @@
   height: 6px;
   background: linear-gradient(-45deg, transparent 60%, black 50%);
   opacity: 0;
-  border-radius: 1px;
+  border-radius: 1px; */
 }
 
 .terminal
   .terminal-header
   .terminal-buttons-container
   .terminal-button-green::after {
-  content: "";
+  /* content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -116,23 +116,22 @@
   height: 6px;
   background: linear-gradient(135deg, transparent 60%, black 50%);
   opacity: 0;
-  border-radius: 1px;
+  border-radius: 1px; */
 }
 
 .terminal .terminal-body {
-  height: 100%;
-  width: 100%;
-  /* this should prob be changed */
-  width: 400px;
-  height: 200px;
-  /*  */
+  width: 570px;
+  min-height: 365px;
+  max-height: 365px;
   box-sizing: border-box;
   overflow-y: scroll;
   overflow: auto;
   font-family: "SF Mono";
+  height: 100%;
   font-weight: bold;
   font-size: 11px;
   padding: 3px 4px;
+  position: relative;
 }
 .terminal .input,
 .terminal .submitted {
@@ -183,4 +182,13 @@
   margin: 0;
   padding: 0;
   white-space: pre-wrap;
+}
+
+@media screen and (max-width: 620px) {
+  .terminal {
+    margin: 20px;
+  }
+  .terminal .terminal-body {
+    width: 90vw;
+  }
 }

@@ -1,18 +1,32 @@
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
+import branches from "./branches.json";
+
 import "./main.css";
 
-function RTerminal(props) {
+function Terminal(props) {
+  const [branch, setBranch] = useState(props.branch || randomBranch());
   // default props
   const {
     dirs = ["pass", "in", "your", "custom", "dirs"], // set default dirs value
+    cwd = "/rbash",
     commands = {},
     builtInCommands = {
       clear: { cmd: "clear/cls", output: null, def: "clears terminal" },
+      // cd: {
+      //   cmd: "cd",
+      //   output: null,
+      //   def: "change into new directory",
+      // },
       help: {
         cmd: "help",
         output: null,
         def: "shows list of available commands",
+      },
+      pwd: {
+        cmd: "pwd",
+        output: cwd,
+        def: "outputs current working directory",
       },
       ls: {
         cmd: "ls",
@@ -64,6 +78,32 @@ function RTerminal(props) {
       current.push(nInput);
       return current;
     }
+    //   if (input.startsWith("cd")) {
+    //     const cmd = input.split(" ");
+    //     const dir = cmd[1];
+
+    //     // change current line type
+    //     const current = [...commandLine];
+    //     const i = current.find((obj) => obj.id === id);
+    //     i.type = "submitted";
+    //     i.text = input.replace(/&nbsp;/g, " ");
+    //     // generate output
+    //     const nOutput = {
+    //       id: uuid(),
+    //
+    //       type: "output",
+    //       text:
+    //         dirs.includes(dir) || dir === ".."
+    //           ? null
+    //           : `-bash: cd: ${dir}: No such file or directory
+    // `,
+    //     };
+    //     const nInput = { id: uuid(), type: "input" };
+    //     current.push(nOutput, nInput);
+    //     // reset caret margins
+    //     setCaretPosition(0);
+    //     return current;
+    //   }
     const cmd = input.trim().split(" ")[0];
     // add previous command to array
     const prev = [...previousCommands];
@@ -85,6 +125,7 @@ function RTerminal(props) {
       // generate output
       const nOutput = {
         id: uuid(),
+
         type: "list-output",
         text: [
           "Welcome to the help menu!",
@@ -109,6 +150,7 @@ function RTerminal(props) {
       // generate output
       const nOutput = {
         id: uuid(),
+
         type: "list-output",
         text: dirs,
       };
@@ -126,6 +168,7 @@ function RTerminal(props) {
       // generate output
       const nOutput = {
         id: uuid(),
+
         type: "output",
         text:
           cmd in builtInCommands
@@ -170,6 +213,17 @@ function RTerminal(props) {
       // Enter key pressed
       event.preventDefault();
       setCommandLine(handleSubmit(event, id));
+    } else if (event.keyCode === 9 && input.innerText.startsWith("cd")) {
+      event.preventDefault();
+      const i = input.innerText.split(" ")[1];
+      const matchedDirs = dirs.filter((dir) => dir.startsWith(i));
+      if (matchedDirs.length === 1) {
+        const newCmd = `cd ${matchedDirs[0]}`;
+        input.innerText = newCmd;
+        // Move the actual caret
+        setEndOfContenteditable(input);
+        setCaretPosition(newCmd.length);
+      }
     } else if (event.keyCode === 38 || event.keyCode === 40) {
       event.preventDefault();
     } else if (
@@ -201,6 +255,30 @@ function RTerminal(props) {
     }
   };
 
+  function setEndOfContenteditable(contentEditableElement) {
+    var range, selection;
+    if (document.createRange) {
+      //Firefox, Chrome, Opera, Safari, IE 9+
+      range = document.createRange(); //Create a range (a range is a like the selection but invisible)
+      range.selectNodeContents(contentEditableElement); //Select the entire contents of the element with the range
+      range.collapse(false); //collapse the range to the end point. false means collapse to end rather than the start
+      selection = window.getSelection(); //get the selection object (allows you to change selection)
+      selection.removeAllRanges(); //remove any selections already made
+      selection.addRange(range); //make the range you have just created the visible selection
+    } else if (document.selection) {
+      //IE 8 and lower
+      range = document.body.createTextRange(); //Create a range (a range is a like the selection but invisible)
+      range.moveToElementText(contentEditableElement); //Select the entire contents of the element with the range
+      range.collapse(false); //collapse the range to the end point. false means collapse to end rather than the start
+      range.select(); //Select the range (make it the visible selection
+    }
+  }
+
+  function randomBranch() {
+    const index = Math.floor(Math.random() * branches.length);
+    return branches[index];
+  }
+
   return (
     <div>
       <div className="terminal">
@@ -229,7 +307,9 @@ function RTerminal(props) {
               case "first-input":
                 return (
                   <div key={i} className="first-input">
-                    <span>~</span>
+                    <span>
+                      ~{cwd} {branch && <span>({branch})</span>}
+                    </span>
                     <form>
                       <span className="money">$</span>
                       <div
@@ -253,7 +333,9 @@ function RTerminal(props) {
               case "input":
                 return (
                   <div key={i} className="input">
-                    <span>~</span>
+                    <span>
+                      ~{cwd} {branch && <span>({branch})</span>}
+                    </span>
                     <form>
                       <span className="money">$</span>
                       <div
@@ -280,7 +362,9 @@ function RTerminal(props) {
                     key={i}
                     className={i === 0 ? "first-submitted" : "submitted"}
                   >
-                    <span>~</span>
+                    <span>
+                      ~{cwd} {branch && <span>({branch})</span>}
+                    </span>
                     <form>
                       <span className="money">$</span>
                       <div className="terminal-input">{line.text}</div>
@@ -317,4 +401,4 @@ function RTerminal(props) {
   );
 }
 
-export { RTerminal };
+export { Terminal };

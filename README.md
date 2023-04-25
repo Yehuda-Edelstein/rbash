@@ -4,6 +4,8 @@ A customizable React component that renders a terminal-like interface. It suppor
 
 <img alt="example" src="https://user-images.githubusercontent.com/92326059/234421648-9b0758d6-4a62-4d35-bfbb-e2c369761543.png" width="450" align="left">
 
+<br>
+
 ## Usage
 
 To use the rbash in your React project, you can install it from NPM by running `npm install rbash` and importing it:

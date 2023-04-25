@@ -2,7 +2,7 @@
 
 A customizable React component that renders a terminal-like interface. It supports various built-in commands like `ls`, `help`, `clear`, while also providing an interface for custom commands.
 
-<img alt="example" src="https://user-images.githubusercontent.com/92326059/234421648-9b0758d6-4a62-4d35-bfbb-e2c369761543.png" width="500" align="right">
+<img alt="example" src="https://user-images.githubusercontent.com/92326059/234421648-9b0758d6-4a62-4d35-bfbb-e2c369761543.png" width="450" align="left">
 
 ## Usage
 

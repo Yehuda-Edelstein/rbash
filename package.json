@@ -1,6 +1,6 @@
 {
   "name": "rbash",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "A customizable React terminal component with built-in commands.",
   "main": "main.jsx",
   "scripts": {

@@ -1,7 +1,12 @@
+@font-face {
+  font-family: "SF Mono";
+  src: url("/SF-Mono-Medium.otf") format("opentype");
+}
+
 .terminal {
+  font-family: "SF Mono";
   border: 1px solid #646464;
   border-radius: 10px;
-  font-family: monospace;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -126,9 +131,7 @@
   box-sizing: border-box;
   overflow-y: scroll;
   overflow: auto;
-  font-family: "SF Mono";
   height: 100%;
-  font-weight: bold;
   font-size: 11px;
   padding: 3px 4px;
   position: relative;

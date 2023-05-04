@@ -1,13 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
-import branches from "./branches.json";
-
+import branches from "./assets/branches.json";
+import { themes } from "./themes";
 import "./main.css";
 
 function Terminal(props) {
+  // get current date
+  const d = new Date();
   const [branch, setBranch] = useState(props.branch || randomBranch());
   // default props
   const {
+    firstLine = `Last login: ${d.toDateString()} ${d
+      .toLocaleTimeString()
+      .replace(
+        /\s[AP]M$/,
+        ""
+      )} on ttys001. Type 'help' for a list of commands.`,
     dirs = ["pass", "in", "your", "custom", "dirs"], // set default dirs value
     cwd = "/rbash",
     commands = {},
@@ -37,21 +45,14 @@ function Terminal(props) {
     },
     bgColor = "#1e1e1e",
     color = "White",
+    theme = "default",
   } = props;
-
-  // get current date
-  const d = new Date();
 
   const [commandLine, setCommandLine] = useState([
     {
       id: uuid(),
       type: "time",
-      text: `Last login: ${d.toDateString()} ${d
-        .toLocaleTimeString()
-        .replace(
-          /\s[AP]M$/,
-          ""
-        )} on ttys001. Type 'help' for a list of commands.`,
+      text: firstLine,
     },
     { id: uuid(), type: "input" },
   ]);
@@ -297,10 +298,14 @@ function Terminal(props) {
         </div>
         <div
           className="terminal-body"
-          style={{
-            backgroundColor: bgColor,
-            color: color,
-          }}
+          style={
+            theme && themes[theme]
+              ? {
+                  backgroundColor: themes[theme].bgColor,
+                  color: themes[theme].color,
+                }
+              : { backgroundColor: bgColor, color: color }
+          }
         >
           {commandLine.map((line, i) => {
             switch (line.type) {

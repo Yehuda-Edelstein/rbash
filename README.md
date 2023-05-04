@@ -70,6 +70,33 @@ function App() {
 }
 ```
 
+## Themes
+There are a variety of built-in color themes to choose from. Apply a theme by passing the `theme` name as a prop (string) to the component. If a theme is not specified, the component will default to the `default` theme:
+
+- default
+- aqua
+- aurora
+- blossom
+- cafe
+- candy
+- cobalt
+- coral
+- galaxy
+- iris
+- mango
+- ocean
+- orchid
+- peacock
+- plum
+- rust
+- sage
+- tangerine
+- teal
+- wine
+
+If you pass a `theme` as well as `bgColor` and `color` props, the `theme` will overide the other props. If, however, the `theme` is misspelled, the other props will take effect.
+
+
 ## Contributing
 
 Bug reports and pull requests are welcome, feel free to contribute in any you can.

@@ -1,5 +1,5 @@
 # rbash
-[![Badge Name](https://img.shields.io/npm/dw/rbash?color=%23F64C72)](link-to-your-package)
+[![Badge Name](https://img.shields.io/npm/dw/rbash?color=%23F64C72)](https://www.npmjs.com/package/rbash)
 
 A customizable React component that renders a terminal-like interface. It supports various built-in commands like `ls`, `help`, `clear`, while also providing an interface for custom commands.
 

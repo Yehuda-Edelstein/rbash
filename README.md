@@ -46,6 +46,10 @@ builtInCommands = {
 
 Note that while you can alter the `builtInCommands` it is not advisable to do so.
 
+If you click the red button the terminal will close and a small icon will appear in the bottom-left of the screen in a fixed position. To reopen the terminal just click on the icon.
+
+Note (2) that closing the terminal will erase current line.
+
 ## Adding Custom Commands
 
 To add custom commands, pass an object to the commands prop with the command name as the key and an object with the following properties as the value:
@@ -71,12 +75,12 @@ function App() {
 ```
 
 ## Themes
+
 There are a variety of built-in color themes to choose from. Apply a theme by passing the `theme` name as a prop (string) to the component. If a theme is not specified, the component will default to the `default` theme:
 
 - default
 - aqua
 - aurora
-- blossom
 - cafe
 - candy
 - cobalt
@@ -95,7 +99,6 @@ There are a variety of built-in color themes to choose from. Apply a theme by pa
 - wine
 
 If you pass a `theme` as well as `bgColor` and `color` props, the `theme` will overide the other props. If, however, the `theme` is misspelled, the other props will take effect.
-
 
 ## Contributing
 

@@ -3,6 +3,23 @@
   src: url("/SF-Mono-Medium.otf") format("opentype");
 }
 
+.icon {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.icon:hover {
+  transform: scale(105%);
+  cursor: pointer;
+}
+
+.icon img {
+  width: 90px;
+}
+
 .terminal {
   font-family: "SF Mono";
   border: 1px solid #646464;
@@ -46,6 +63,13 @@
 .terminal .terminal-header .terminal-buttons-container .terminal-button-red {
   background-color: #ff5f57;
   position: relative;
+}
+
+.terminal
+  .terminal-header
+  .terminal-buttons-container
+  .terminal-button-red:active {
+  opacity: 0.5;
 }
 
 .terminal

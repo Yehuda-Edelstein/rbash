@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { v4 as uuid } from "uuid";
 import branches from "./assets/branches.json";
 import { themes } from "./themes";
+import icon from "./assets/icon.png";
 import "./main.css";
 
 function Terminal(props) {
+  const [closed, setClosed] = useState(false);
   // get current date
   const d = new Date();
   const [branch, setBranch] = useState(props.branch || randomBranch());
@@ -63,7 +65,7 @@ function Terminal(props) {
   const inputRef = useRef(null);
 
   useEffect(() => {
-    inputRef.current.focus();
+    inputRef.current?.focus();
   }, [commandLine]);
 
   const handleSubmit = (event, id) => {
@@ -288,126 +290,143 @@ function Terminal(props) {
 
   return (
     <div>
-      <div className="terminal">
-        <div className="terminal-header">
-          <div className="terminal-buttons-container">
-            <span className="terminal-button terminal-button-red" />
-            <span className="terminal-button terminal-button-yellow" />
-            <span className="terminal-button terminal-button-green" />
+      {!closed ? (
+        <div className="terminal">
+          <div className="terminal-header">
+            <div className="terminal-buttons-container">
+              <span
+                className="terminal-button terminal-button-red"
+                onClick={() => {
+                  setClosed(true);
+                }}
+              />
+              <span className="terminal-button terminal-button-yellow" />
+              <span className="terminal-button terminal-button-green" />
+            </div>
+          </div>
+          <div
+            className="terminal-body"
+            style={
+              theme && themes[theme]
+                ? {
+                    backgroundColor: themes[theme].bgColor,
+                    color: themes[theme].color,
+                  }
+                : { backgroundColor: bgColor, color: color }
+            }
+          >
+            {commandLine.map((line, i) => {
+              switch (line.type) {
+                case "time":
+                  return (
+                    <div className="time" key={i}>
+                      <span className="terminal-time">{line.text}</span>
+                    </div>
+                  );
+                case "first-input":
+                  return (
+                    <div key={i} className="first-input">
+                      <span>
+                        ~{cwd} {branch && <span>({branch})</span>}
+                      </span>
+                      <form>
+                        <span className="money">$</span>
+                        <div
+                          contentEditable
+                          className="terminal-input"
+                          onBlur={({ target }) => target.focus()}
+                          autoFocus
+                          ref={inputRef}
+                          onKeyDown={(ev) => {
+                            handleKeyDown(ev, line.id);
+                          }}
+                          spellCheck="false"
+                        ></div>
+                        <span
+                          className="text-caret"
+                          style={{ left: `${caretPosition}ch` }}
+                        ></span>
+                      </form>
+                    </div>
+                  );
+                case "input":
+                  return (
+                    <div key={i} className="input">
+                      <span>
+                        ~{cwd} {branch && <span>({branch})</span>}
+                      </span>
+                      <form>
+                        <span className="money">$</span>
+                        <div
+                          contentEditable
+                          className="terminal-input"
+                          onBlur={({ target }) => target.focus()}
+                          autoFocus
+                          ref={inputRef}
+                          onKeyDown={(ev) => {
+                            handleKeyDown(ev, line.id);
+                          }}
+                          spellCheck="false"
+                        ></div>
+                        <span
+                          className="text-caret"
+                          style={{ left: `${caretPosition}ch` }}
+                        ></span>
+                      </form>
+                    </div>
+                  );
+                case "submitted":
+                  return (
+                    <div
+                      key={i}
+                      className={i === 0 ? "first-submitted" : "submitted"}
+                    >
+                      <span>
+                        ~{cwd} {branch && <span>({branch})</span>}
+                      </span>
+                      <form>
+                        <span className="money">$</span>
+                        <div className="terminal-input">{line.text}</div>
+                      </form>
+                    </div>
+                  );
+                case "output":
+                  return (
+                    <div key={i} className="output">
+                      {line.text}
+                    </div>
+                  );
+                case "list-output":
+                  return (
+                    <div className="list" key={i}>
+                      {line.text.map((text, j) => (
+                        <div
+                          key={j}
+                          className="list-item"
+                          style={{ minHeight: "12.5px" }}
+                        >
+                          {text}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                default:
+                  return null;
+              }
+            })}
           </div>
         </div>
+      ) : (
         <div
-          className="terminal-body"
-          style={
-            theme && themes[theme]
-              ? {
-                  backgroundColor: themes[theme].bgColor,
-                  color: themes[theme].color,
-                }
-              : { backgroundColor: bgColor, color: color }
-          }
+          className="icon"
+          onClick={() => {
+            setClosed(false);
+            setCaretPosition(0);
+          }}
         >
-          {commandLine.map((line, i) => {
-            switch (line.type) {
-              case "time":
-                return (
-                  <div className="time" key={i}>
-                    <span className="terminal-time">{line.text}</span>
-                  </div>
-                );
-              case "first-input":
-                return (
-                  <div key={i} className="first-input">
-                    <span>
-                      ~{cwd} {branch && <span>({branch})</span>}
-                    </span>
-                    <form>
-                      <span className="money">$</span>
-                      <div
-                        contentEditable
-                        className="terminal-input"
-                        onBlur={({ target }) => target.focus()}
-                        autoFocus
-                        ref={inputRef}
-                        onKeyDown={(ev) => {
-                          handleKeyDown(ev, line.id);
-                        }}
-                        spellCheck="false"
-                      ></div>
-                      <span
-                        className="text-caret"
-                        style={{ left: `${caretPosition}ch` }}
-                      ></span>
-                    </form>
-                  </div>
-                );
-              case "input":
-                return (
-                  <div key={i} className="input">
-                    <span>
-                      ~{cwd} {branch && <span>({branch})</span>}
-                    </span>
-                    <form>
-                      <span className="money">$</span>
-                      <div
-                        contentEditable
-                        className="terminal-input"
-                        onBlur={({ target }) => target.focus()}
-                        autoFocus
-                        ref={inputRef}
-                        onKeyDown={(ev) => {
-                          handleKeyDown(ev, line.id);
-                        }}
-                        spellCheck="false"
-                      ></div>
-                      <span
-                        className="text-caret"
-                        style={{ left: `${caretPosition}ch` }}
-                      ></span>
-                    </form>
-                  </div>
-                );
-              case "submitted":
-                return (
-                  <div
-                    key={i}
-                    className={i === 0 ? "first-submitted" : "submitted"}
-                  >
-                    <span>
-                      ~{cwd} {branch && <span>({branch})</span>}
-                    </span>
-                    <form>
-                      <span className="money">$</span>
-                      <div className="terminal-input">{line.text}</div>
-                    </form>
-                  </div>
-                );
-              case "output":
-                return (
-                  <div key={i} className="output">
-                    {line.text}
-                  </div>
-                );
-              case "list-output":
-                return (
-                  <div className="list" key={i}>
-                    {line.text.map((text, j) => (
-                      <div
-                        key={j}
-                        className="list-item"
-                        style={{ minHeight: "12.5px" }}
-                      >
-                        {text}
-                      </div>
-                    ))}
-                  </div>
-                );
-              default:
-                return null;
-            }
-          })}
+          <img src={icon} alt="" />
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,82 +1,74 @@
 export const themes = {
   default: {
     bgColor: "#1e1e1e",
-    color: "White",
+    color: "white",
   },
   aqua: {
-    bgColor: "#00FFFF",
-    color: "#000000",
+    bgColor: "#008B8B",
+    color: "#F8F8FF",
   },
   aurora: {
-    bgColor: "#F5FFFA",
-    color: "#A0522D",
-  },
-  blossom: {
-    bgColor: "#FFF5EE",
-    color: "#A0522D",
+    bgColor: "#8BC34A",
+    color: "#303030",
   },
   cafe: {
-    bgColor: "#6F4E37",
-    color: "#FFFFFF",
+    bgColor: "#a57c3d",
+    color: "#F8F8FF",
   },
   candy: {
-    bgColor: "#FFC0CB",
-    color: "#8B0000",
+    bgColor: "#FFA07A",
+    color: "#4B0082",
   },
   cobalt: {
-    bgColor: "#0047AB",
-    color: "#FFFFFF",
+    bgColor: "#4169E1",
+    color: "#F8F8FF",
   },
   coral: {
-    bgColor: "#FF7F50",
-    color: "#FFFFFF",
-  },
-  galaxy: {
-    bgColor: "#2E2E2E",
-    color: "#D1D1D1",
+    bgColor: "#FF6347",
+    color: "#F8F8FF",
   },
   iris: {
-    bgColor: "#5A4FCF",
-    color: "#FFFFFF",
+    bgColor: "#9C27B0",
+    color: "#F8F8FF",
   },
   mango: {
-    bgColor: "#FFA500",
-    color: "#000000",
+    bgColor: "#FF8C00",
+    color: "#191970",
   },
   ocean: {
-    bgColor: "#1E90FF",
-    color: "#FFFFFF",
+    bgColor: "#00BFFF",
+    color: "#F8F8FF",
   },
   orchid: {
-    bgColor: "#DA70D6",
-    color: "#FFFFFF",
+    bgColor: "#9932CC",
+    color: "#F8F8FF",
   },
   peacock: {
-    bgColor: "#33A1C9",
-    color: "#FFFFFF",
+    bgColor: "#00CED1",
+    color: "#F8F8FF",
   },
   plum: {
-    bgColor: "#8E4585",
-    color: "#FFFFFF",
+    bgColor: "#6A5ACD",
+    color: "#F8F8FF",
   },
   rust: {
-    bgColor: "#CD5C5C",
-    color: "#FFFFFF",
+    bgColor: "#D2691E",
+    color: "#F8F8FF",
   },
   sage: {
-    bgColor: "#87AE73",
-    color: "#FFFFFF",
+    bgColor: "#556B2F",
+    color: "#F8F8FF",
   },
   tangerine: {
-    bgColor: "#FFA07A",
-    color: "#000000",
+    bgColor: "#FFA500",
+    color: "#2F4F4F",
   },
   teal: {
     bgColor: "#008080",
-    color: "#FFFFFF",
+    color: "#F8F8FF",
   },
   wine: {
-    bgColor: "#722F37",
-    color: "#FFFFFF",
+    bgColor: "#8B0000",
+    color: "#F8F8FF",
   },
 };
